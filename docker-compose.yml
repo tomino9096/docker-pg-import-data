@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  pg_restore:
+    image: postgres:17-alpine
+    container_name: psql_restore_tool
+    volumes:
+      - ./db.sql:/dump/db.sql:ro
+    entrypoint: >
+      sh -c "
+      echo 'Waiting for host Postgres to be ready...' &&
+      until pg_isready -h host.docker.internal -p 5432 -U $POSTGRES_USER; do
+        sleep 1;
+      done &&
+      echo 'Restoring plain SQL dump...' &&
+      psql -h host.docker.internal -p 5432 -U $POSTGRES_USER -d $POSTGRES_DB -f /dump/db.sql
+      "
+    env_file:
+      - .env

@@ -1,0 +1,6 @@
+.idea/
+.vscode/
+.env
+.sql
+.tar.bz2
+.tar.gz
